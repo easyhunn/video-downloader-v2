@@ -1,9 +1,3 @@
-Skip to content Search or jump to… Pull requests Issues Marketplace Explore
-@easyhunn easyhunn / video-downloader Public 1 00 Code Issues Pull requests
-Actions Projects Wiki Security Insights Settings
-video-downloader/src/views/Login.vue @easyhunn easyhunn base Latest commit
-7e908a8 11 days ago History 1 contributor 126 lines (121 sloc) 3.17 KB
-
 <template>
   <div class="w-full h-full flex items-center justify-center bg-gray-50">
     <div class="sm:w-1/2 xl:w-1/3">
@@ -91,6 +85,7 @@ export default {
   },
   methods: {
     async handleLogin() {
+      this.$store.commit("setLoadingStatus", true);
       Auth.dispatch("signIn", {
         email: this.email,
         password: this.password,
@@ -106,13 +101,17 @@ export default {
         } else {
           this.isAuthFalse = true;
         }
+        this.$store.commit("setLoadingStatus", false);
       });
     },
     handleSignup() {
       let me = this;
+      this.$store.commit("setLoadingStatus", true);
+
       Auth.dispatch("signUp", { email: this.email, password: this.password })
         .then((result) => {
           // me.isVerify = true;
+          this.$store.commit("setLoadingStatus", false);
         })
         .catch((err) => {
           alert("error");

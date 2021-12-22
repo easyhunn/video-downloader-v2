@@ -1,7 +1,7 @@
 <template>
   <div class="main-view">
-    <Content v-show="fitUrl" />
-    <Recommend v-show="!fitUrl" />
+    <Content v-show="viewMode == 2" />
+    <Recommend v-show="viewMode == 1" />
   </div>
 </template>
 <script>
@@ -15,6 +15,7 @@ export default {
   computed: {
     ...mapGetters({
       fitUrl: "getFitVideo",
+      viewMode: "viewMode"
     }),
   },
 };

@@ -27,7 +27,7 @@
               min-width="0"
               v-bind="attrs"
               v-on="on"
-              class="m-4 transparent-btn"
+              class=" transparent-btn"
             >
               <div class="d-icon icon-arrow-down sm-icon"></div>
             </v-btn>
@@ -41,9 +41,11 @@
             </v-list-item>
             <v-list-item v-show="email">
               <v-list-item-title>
-                <router-link to="/login" v-on:click.native="signOut()">
+                <!-- <router-link to="/login" v-on:click.native="">
+                </router-link> -->
+                <div v-on:click="signOut()">
                   Sign out
-                </router-link>
+                </div>
               </v-list-item-title>
             </v-list-item>
           </v-list>
@@ -165,6 +167,7 @@ export default {
     signOut() {
       console.log("signOut");
       Auth.dispatch("signOut");
+      this.$router.push("/login");
     },
   },
   computed: {

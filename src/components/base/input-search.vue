@@ -32,7 +32,7 @@
     </div>
     <v-progress-linear
       style="margin-top: 4px;"
-      v-show="loading"
+      v-show="isSearching"
       indeterminate
       color="#2b3173"
     ></v-progress-linear>
@@ -49,7 +49,7 @@
     input {
       background-color: #ffffff;
       color: #111111;
-      border: #ccc;
+      border: 1px solid #ccc;
       box-shadow: inset 0 1px 2px #eee;
       outline: none;
       width: 100%;
@@ -94,9 +94,8 @@ export default {
       if (this.$router.path != "/") {
         this.$router.push("/");
       }
-      this.$store.dispatch("getYoutubeVideos", this.textSearch);
-      
-      //   this.$root.$emit("newColorInput", e);
+      this.$store.dispatch("getVideos", this.textSearch);
+      // this.$store.state.
     },
   },
   watch: {
@@ -109,7 +108,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      loading: "getLoadingStatus",
+      isSearching: "isSearching",
     }),
   },
 };

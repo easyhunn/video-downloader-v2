@@ -3,20 +3,20 @@
     <!--logo trang cukcuk-->
     <div class="logo-site d-flex" style="border-bottom: 1px solid #F3F4F6;">
       <svg
-          v-on:click="resizeMenu()"
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 6h16M4 12h16M4 18h16"
-          />
-        </svg>
+        v-on:click="resizeMenu()"
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16"
+        />
+      </svg>
       <a href="../" tooltips="  " class="item-content ml-5">
         <div
           class=" h-100 d-flex align-item-center justify-content-center text-green-500 text-base"
@@ -24,7 +24,6 @@
           Downloader
         </div>
       </a>
-      
     </div>
     <!--các tính năng trong menu-->
     <div class="nav-content">
@@ -36,8 +35,6 @@
         v-on:click.native="selectMenu(item)"
         v-bind:class="{ 'menu-active': item.id == selectedMenu }"
       >
-        
-      
         <div class="d-icon" :class="item.icon"></div>
         <div class="nav-item-text item-content">{{ item.name }}</div>
       </router-link>
@@ -66,13 +63,13 @@ export default {
           icon: "icon-earth",
         },
         {
-          name: "Music",
+          name: "Youtbe",
           route: "/",
           id: 2,
           icon: "icon-heart",
         },
         {
-          name: "Program",
+          name: "Facebook",
           route: "/",
           id: 3,
           icon: "icon-setting",

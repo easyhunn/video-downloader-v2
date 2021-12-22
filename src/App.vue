@@ -1,7 +1,14 @@
 <template>
   <v-app>
     <div class="main-view">
+      <v-alert type="success" dense :value="isSuccess">
+        success .
+      </v-alert>
+      <v-alert type="error" dense :value="isError">
+        An error occurred, please try again later.
+      </v-alert>
       <div class="main-view-container">
+        <Loader v-if="loading" />
         <Menu />
         <div class="flex flex-column" style="flex: 1;">
           <Header />
@@ -21,6 +28,8 @@ import VueSupabase from "vue-supabase";
 import Content from "./components/layout/Content.vue";
 import Header from "./components/layout/Header.vue";
 import Menu from "./components/layout/Menu.vue";
+import Loader from "./components/base/loading.vue";
+import { mapGetters } from "vuex";
 
 import "./css/icon.css";
 import "./css/table.css";
@@ -31,18 +40,26 @@ import "./css/input.css";
 import "./css/main.css";
 import "./assets/tailwind.css";
 
-Vue.use(VueSupabase, {
-  supabaseUrl: "https://cjpqxaywbhfbvkqgtcye.supabase.co",
-  supabaseKey:
-    "VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoi/* YW5vbiIsImlhdCI6MTYzMzgzMjY4MiwiZXhwIjoxOTQ5NDA4NjgyfQ.RGW7K04p1BrwDuq3ll_b5sxW6-uV8XhQkSsGeFfXzbM",
-  supabaseOptions: {},
-});
 export default Vue.extend({
   name: "App",
-  components: { Content, Header, Menu },
+  components: { Content, Header, Menu, Loader },
   data: () => ({
     //
   }),
+  computed: {
+    ...mapGetters({
+      isError: "isError",
+      isSuccess: "isSuccess",
+      loading: "getLoadingStatus",
+    }),
+  },
+  watch: {
+    isError: function() {
+      setTimeout(() => {
+        this.$store.commit("setErrorStatus", false);
+      }, 5000);
+    },
+  },
 });
 </script>
 <style lang="scss" scoped>

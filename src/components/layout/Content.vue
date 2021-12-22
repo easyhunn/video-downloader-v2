@@ -5,7 +5,7 @@
         <!-- <iframe
           width="100%"
           :height="440"
-          :src="fitUrl ? fitUrl.url : ''"
+          :src="selectedVideo ? selectedVideo.url : ''"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -13,32 +13,38 @@
           id="mainIframe"
         ></iframe> -->
         <video
-          v-show="fitUrl"
-          src="https://v16-web.tiktok.com/video/tos/useast2a/tos-useast2a-pve-0037-aiso/9a750623305645419f25c936abd8c522/?expire=1639305139&l=20211212043208010251004206005098B8&net=0&pl=0&policy=3&qs=0&rc=M3Jmcmg6ZmdtODMzZjgzM0ApNTk8ZTM6NTtnNzxkaTQ0aGdpaGJncjQway5gLS1kL2NzczYzMmE0YC9eNi4uNjYuYDY6Yw%3D%3D&signature=6188bb50a77ca4dd420d38835fa697ad&tk=0"
-          style="width: 100%; height: 440px"
+          v-show="selectedVideo && selectedVideo.url"
+          :src="selectedVideo ? selectedVideo.url : ''"
+          style="width: 100%; height: 70vh"
           controls
+          autoplay
         ></video>
       </div>
       <div class="video-content">
-        <div class="content-tool-bar my-3" v-show="fitUrl">
-          <div style="width: 100px; height: 40px;">
+        <div class="content-tool-bar my-3" v-show="selectedVideo">
+          <div style="width: 200px; height: 40px;">
             <v-select
               label="Qualify"
               v-on:change="changeQuality()"
               v-model="selectedQuality"
-              v-bind:items="qualify"
+              v-bind:items="videoQuality"
               dense
               solo
               v-on:click="check()"
             ></v-select>
+          </div>
+          <div style="width: 150px; height: 40px;" class="mx-3">
+            <v-btn elevation="2" style="height: 40px;" depressed color="error"
+              >Save Video</v-btn
+            >
           </div>
         </div>
         <div class="video-name" v-show="detail.title">
           <div class="title-1">
             {{ detail.title }} | {{ detail.ownerChannelName }}
           </div>
-          <div class="sub-title py-3" v-show="detail.viewCount">
-            {{ detail.viewCount }} views - {{ detail.publishDate }}
+          <div class="sub-title py-3" v-if="detail">
+            {{ detail.stats.viewCount }} views - {{ detail.publishDate }}
           </div>
         </div>
         <div class="description">
@@ -58,7 +64,7 @@ export default {
     return {
       mainVideoUrl: "",
       qualify: ["360p", "480p", "hd720", "1080p"],
-      selectedQuality: "hd720",
+      selectedQuality: null,
       selectedUrl: null,
     };
   },
@@ -69,29 +75,19 @@ export default {
     check() {
       console.log(this.videoQuality);
     },
-
-    downloadVideo() {
-      debugger;
-      var filename = "test";
-      var element = document.createElement("dowload");
-      element.setAttribute("href", this.fitUrl);
-      element.setAttribute("download", filename);
-
-      element.style.display = "none";
-      document.body.appendChild(element);
-
-      element.click();
-
-      document.body.removeChild(element);
-    },
   },
   computed: {
     ...mapGetters({
       listVideo: "listVideo",
-      fitUrl: "getFitVideo",
+      selectedVideo: "getFitVideo",
       detail: "getVideoDetail",
       videoQuality: "getVideoQuality",
     }),
+  },
+  watch: {
+    videoQuality() {
+      this.selectedQuality = this.videoQuality[0];
+    },
   },
 };
 </script>

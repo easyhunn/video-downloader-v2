@@ -46,7 +46,7 @@ export default {
   },
   methods: {
     async getDownloadFile() {
-      this.$store.dispatch("getYoutubeVideos", this.address);
+      this.$store.dispatch("getVideos", this.address);
       this.dialog = false;
     },
   },
