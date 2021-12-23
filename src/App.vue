@@ -2,10 +2,11 @@
   <v-app>
     <div class="main-view">
       <v-alert type="success" dense :value="isSuccess">
-        success .
+        {{message || 'success.'}}
       </v-alert>
       <v-alert type="error" dense :value="isError">
-        An error occurred, please try again later.
+        {{message || 'An error occurred, please try again later.'}}
+        
       </v-alert>
       <div class="main-view-container">
         <Loader v-if="loading" />
@@ -51,14 +52,20 @@ export default Vue.extend({
       isError: "isError",
       isSuccess: "isSuccess",
       loading: "getLoadingStatus",
+      message: "message"
     }),
   },
   watch: {
     isError: function() {
       setTimeout(() => {
         this.$store.commit("setErrorStatus", false);
-      }, 5000);
+      }, 3000);
     },
+    isSuccess: function() {
+      setTimeout(() => {
+        this.$store.commit("setSuccessStatus", false);
+      }, 3000);
+    }
   },
 });
 </script>

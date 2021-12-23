@@ -2,16 +2,6 @@
   <div class="w-100 h-100 main-content p-3 flex bg-gray-50">
     <div class="w-100 h-100 main-container">
       <div class="video-frame">
-        <!-- <iframe
-          width="100%"
-          :height="440"
-          :src="selectedVideo ? selectedVideo.url : ''"
-          title="YouTube video player"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-          id="mainIframe"
-        ></iframe> -->
         <video
           v-show="selectedVideo && selectedVideo.url"
           :src="selectedVideo ? selectedVideo.url : ''"
@@ -34,8 +24,13 @@
             ></v-select>
           </div>
           <div style="width: 150px; height: 40px;" class="mx-3">
-            <v-btn elevation="2" style="height: 40px;" depressed color="error"
-              >Save Video</v-btn
+            <v-btn
+              v-on:click="addVideo()"
+              elevation="2"
+              style="height: 40px;"
+              depressed
+              color="error"
+              >Add Video</v-btn
             >
           </div>
         </div>
@@ -43,7 +38,7 @@
           <div class="title-1">
             {{ detail.title }} | {{ detail.ownerChannelName }}
           </div>
-          <div class="sub-title py-3" v-if="detail">
+          <div class="sub-title py-3" v-if="detail && detail.stats">
             {{ detail.stats.viewCount }} views - {{ detail.publishDate }}
           </div>
         </div>
@@ -57,13 +52,14 @@
 <style scoped></style>
 <script>
 import { mapGetters } from "vuex";
+import { Auth } from "../../store/auth.ts";
 export default {
   name: "Content",
   components: {},
   data: function() {
     return {
       mainVideoUrl: "",
-      qualify: ["360p", "480p", "hd720", "1080p"],
+      qualify: [],
       selectedQuality: null,
       selectedUrl: null,
     };
@@ -74,6 +70,25 @@ export default {
     },
     check() {
       console.log(this.videoQuality);
+    },
+    addVideo() {
+      let me = this;
+      let thumbnailURL = new URL(me.detail?.thumbnails[0]?.url);
+      let thumbnail = thumbnailURL.origin + thumbnailURL.pathname || "";
+      let video = {
+        id: me.detail.id,
+        source: me.detail.source,
+        title: me.detail.title,
+        description: me.detail.description?.slice(0, 255),
+        thumbnail: thumbnail,
+      };
+      Auth.dispatch("addVideo", video).then((res) => {
+        if (res && res.isSuccess) {
+          this.$store.commit("handleSuccess", "save success.");
+        } else {
+          this.$store.commit("handleError", res.message);
+        }
+      });
     },
   },
   computed: {

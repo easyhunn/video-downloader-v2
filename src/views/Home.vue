@@ -15,7 +15,7 @@ export default {
   computed: {
     ...mapGetters({
       fitUrl: "getFitVideo",
-      viewMode: "viewMode"
+      viewMode: "viewMode",
     }),
   },
 };

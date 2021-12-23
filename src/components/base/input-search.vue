@@ -90,11 +90,11 @@ export default {
      * VMHUNG 12/10/2021
      */
     onSearching(e) {
-      console.log("searching");
-      if (this.$router.path != "/") {
+      this.$store.dispatch("getVideos", this.textSearch);
+      this.$store.commit("setReloadPage", false);
+      if (this.$router.path != '/' && this.$router?.history?.current?.path != '/') {
         this.$router.push("/");
       }
-      this.$store.dispatch("getVideos", this.textSearch);
       // this.$store.state.
     },
   },

@@ -66,14 +66,19 @@ export default {
   computed: {
     ...mapGetters({
       listItem: "listItem",
+      reloadPage: "isReloadPage"
     }),
   },
   created: function() {
     let me = this;
-    this.$store.commit("setLoadingStatus", true);
-    this.$store.dispatch("searchVideo", "").then((res) => {
-      this.$store.commit("setLoadingStatus", false);
-    });
+    if (this.reloadPage) {
+      this.$store.commit("setLoadingStatus", true);
+      this.$store.dispatch("searchVideo", "").then((res) => {
+        this.$store.commit("setLoadingStatus", false);
+      });
+      this.$store.commit("setReloadPage", true);
+
+    }
   },
 };
 </script>

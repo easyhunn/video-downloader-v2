@@ -4,23 +4,12 @@
       <div class="w-100 h-100 main-container">
         <div
           class="item w-100 h-100 cursor-pointer"
+          
           v-for="item in listItem"
           :key="item.id"
         >
-          <div
-            class="w-100 h-100 cursor-pointer d-flex"
-            v-on:click="showVideo(item)"
-          >
-            <img
-              v-if="item.thumbnail"
-              class="item-img"
-              :src="item.thumbnail"
-              alt="avt"
-              width="220px"
-              height="150px"
-            />
-            <div class="video-unavailable item-img"  width="220px"
-              height="150px" v-if="!item || !item.thumbnail"></div>
+          <div class="w-100 h-100 cursor-pointer d-flex" v-on:click="showVideo(item)">
+            <img class="item-img" :src="item.thumbnail" alt="avt" />
             <div class="content">
               <div class="title text-ellipsis">
                 {{ item.title }}
@@ -54,7 +43,7 @@
 import { mapGetters } from "vuex";
 import { Auth } from "../store/auth.ts";
 export default {
-  name: "Category",
+  name: "Youtube",
   components: {},
   data: function() {
     return {};
@@ -76,7 +65,7 @@ export default {
   },
   computed: {
     listItem() {
-      return Auth.getters.savedVideos;
+      return Auth.getters.youtubeVideos;
     },
   },
   created: function() {

@@ -24,25 +24,14 @@ export default new Vuex.Store({
     isSearching: false,
     listItem: Array<VideoPreview>(), // danh sách các video xem trước
     viewMode: 1, // tạm thời fix 1 list preview 2 video
+    reloadPage: true, // có cần reload lại trang k // tạm thời đang dùng cho màn recommend
   },
   mutations: {
     setlistVideo(state, listVideo) {
       state.listVideo = listVideo;
     },
     setVideoDetail(state, detail) {
-      // format string to view count 000,000,000
-
-      // if (detail && detail.stats && detail.stats.viewCount) {
-      //   const views = detail.viewCount as string;
-      //   let formatedViews = "";
-      //   for (let i = 0; i <= views.length; i += 3) {
-      //     formatedViews += views.substring(i, i + 3);
-      //     if (i + 3 < views.length) {
-      //       formatedViews += ",";
-      //     }
-      //   }
-      //   detail.viewCount = formatedViews;
-      // }
+      //pending
       state.videoDetails = detail;
     },
     setListPreview(state, list) {
@@ -75,6 +64,9 @@ export default new Vuex.Store({
     setViewMode(state, mode) {
       state.viewMode = mode;
     },
+    setReloadPage(state, status) {
+      state.reloadPage = status;
+    },
   },
   actions: {
     getVideos(context, textSearch) {
@@ -93,7 +85,7 @@ export default new Vuex.Store({
     async getVideosByURL(context, textSearch) {
       let url = "https://getvideo-api.vietlach.vn/api/v1/api/video/all";
       let params = { url: textSearch };
-      
+
       await axios
         .post(url, params)
         .then((res: any) => {
@@ -112,6 +104,7 @@ export default new Vuex.Store({
           context.commit("handleError", "Can't find video.");
         })
         .finally(() => {
+          context.commit("setLoadingStatus", false);
           context.commit("setSearchingStatus", false);
         });
     },
@@ -121,7 +114,6 @@ export default new Vuex.Store({
      * @param textSearch
      */
     async searchVideo(context, textSearch) {
-
       let url =
         "https://getvideo-api.vietlach.vn/api/v1/api/search/youtube?search_query=" +
         textSearch;
@@ -141,15 +133,17 @@ export default new Vuex.Store({
         })
         .finally(() => {
           context.commit("setLoadingStatus", false);
-          context.commit("setSearchingStatus", false);
-
+          context.commit("setLoadingStatus", false);
         });
     },
-    async getVideosById(context, id) {
-      let url = "http://localhost:3333/api/video/youtube?id=" + id;
+    async getVideosById(context, video) {
+      let url =
+        `https://getvideo-api.vietlach.vn/api/v1/api/video/${video.source ||
+          "youtube"}?id=` + video.id;
       await axios
         .get(url)
         .then((res: any) => {
+          debugger;
           if (res && res.data) {
             if (res.data.data) {
               const data = res.data.data;
@@ -166,6 +160,7 @@ export default new Vuex.Store({
         })
         .finally(() => {
           context.commit("setSearchingStatus", false);
+          context.commit("setLoadingStatus", false);
         });
     },
   },
@@ -221,6 +216,9 @@ export default new Vuex.Store({
     },
     viewMode(state) {
       return state.viewMode;
+    },
+    isReloadPage(state) {
+      return state.reloadPage;
     },
   },
 

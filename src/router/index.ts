@@ -5,6 +5,10 @@ import Login from "../views/Login.vue";
 import SignUp from "../views/SignUp.vue";
 import ForgotPassword from "../views/ForgotPassword.vue";
 import Category from "../views/Category.vue";
+import Youtube from "../views/Youtube.vue";
+import Tiktok from "../views/TikTok.vue";
+import Facebook from "../views/Facebook.vue";
+
 import { Auth } from "../store/auth";
 
 Vue.use(VueRouter);
@@ -53,6 +57,33 @@ const routes: Array<RouteConfig> = [
       requiresAuth: true,
     },
   },
+  {
+    path: "/youtube",
+    name: "Youtube",
+    component: Youtube,
+    meta: {
+      requiresAuth: true,
+    },
+    
+  },
+  {
+    path: "/tiktok",
+    name: "Tiktok",
+    component: Tiktok,
+    meta: {
+      requiresAuth: true,
+    },
+    
+  },
+  {
+    path: "/facebook",
+    name: "Facebook",
+    component: Facebook,
+    meta: {
+      requiresAuth: true,
+    },
+    
+  },
 ];
 
 const router = new VueRouter({
@@ -60,12 +91,6 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 });
-
-// const supabaseUrl = "https://dwmzsauhrdfgibbhcrbb.supabase.co";
-// const supabaseAnonKey =
-//   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYzNTYxMTczNCwiZXhwIjoxOTUxMTg3NzM0fQ.Nya1NRIhzxo6Eo4PVs-OtG-2vPYrs0Iv1Wj2O6In7oc";
-
-// const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 router.beforeEach((to, from, next) => {
   // get current user info

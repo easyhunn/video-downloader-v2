@@ -54,7 +54,7 @@
 import { mapGetters } from "vuex";
 import { Auth } from "../store/auth.ts";
 export default {
-  name: "Category",
+  name: "TikTok",
   components: {},
   data: function() {
     return {};
@@ -76,7 +76,7 @@ export default {
   },
   computed: {
     listItem() {
-      return Auth.getters.savedVideos;
+      return Auth.getters.tikTokVideos;
     },
   },
   created: function() {

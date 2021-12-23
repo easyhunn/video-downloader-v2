@@ -38,6 +38,7 @@ export const Auth = new Vuex.Store({
     email: "",
     password: "",
     token: "",
+    id: "",
     listSavedVideo: [],
   },
   mutations: {
@@ -45,6 +46,19 @@ export const Auth = new Vuex.Store({
       state.email = email;
       state.password = password;
       state.token = token;
+    },
+    setListSavedVideos(state, listVideo) {
+      state.listSavedVideo = listVideo;
+    },
+    deleteVideo(state, video) {
+      if (video && video.id && video.source) {
+        let index = state.listSavedVideo.findIndex(
+          (x) => x.id == video.id && x.source == video.source
+        );
+        if (index >= 0) {
+          state.listSavedVideo.splice(index, 1);
+        }
+      }
     },
   },
   actions: {
@@ -74,10 +88,9 @@ export const Auth = new Vuex.Store({
       return isLoginSuccess;
     },
     signOut(context) {
-      context.commit("index/setLoadingStatus", true);
       context.commit("setUser", {});
       deleteCookie("email");
-      context.commit("index/setLoadingStatus", false);
+      deleteCookie("token");
     },
     async signUp(context, { email, password }) {
       await axios
@@ -97,14 +110,14 @@ export const Auth = new Vuex.Store({
       let url = "https://getvideo-api.vietlach.vn/api/v1/auth/video";
       let token = context.state.token || getCookie("token");
       let header = {
-        headers: { Authorization: "Bearer " + context.state.token },
+        headers: { Authorization: "Bearer " + token },
       };
       await axios
         .get(url, header)
         .then((res: any) => {
           if (res && res.data) {
             let reqRes = res.data;
-            if (reqRes.status == 1 && reqRes.data) {
+            if (reqRes.data) {
               context.commit("setListSavedVideos", reqRes.data);
             }
           }
@@ -113,6 +126,61 @@ export const Auth = new Vuex.Store({
           // context.commit("handleError", "Can't find video.");
         })
         .finally(() => {});
+    },
+    /**
+     * Lưu video
+     * @param context
+     * @param video
+     */
+    async addVideo(context, video) {
+      let url = "https://getvideo-api.vietlach.vn/api/v1/auth/video";
+      let token = context.state.token || getCookie("token");
+      let header = {
+        headers: { Authorization: "Bearer " + token },
+      };
+      let result = {
+        isSuccess: false,
+        message: "",
+      };
+      await axios
+        .post(url, video, header)
+        .then((res: any) => {
+          if (res) {
+            result.isSuccess = true;
+          }
+        })
+        .catch(function(error) {
+          result.isSuccess = false;
+          result.message = error?.response?.data?.message || "";
+        });
+      return result;
+    },
+    async deleteVideo(context, video) {
+      if (video && video.id) {
+        context.commit("deleteVideo", video);
+        let url = "https://getvideo-api.vietlach.vn/api/v1/auth/video";
+        let token = context.state.token || getCookie("token");
+        let header = {
+          headers: { Authorization: "Bearer " + token },
+        };
+        await axios
+          .delete(url, {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+            data: {
+              source: video.source,
+              id: video.id,
+            },
+          })
+          .then((res: any) => {
+          })
+          .catch(function(error) {
+            // context.commit("handleError", "Can't find video.");
+            console.log("delete error");
+          })
+          .finally(() => {});
+      }
     },
   },
   getters: {
@@ -129,5 +197,14 @@ export const Auth = new Vuex.Store({
     savedVideos(state) {
       return state.listSavedVideo;
     },
+    youtubeVideos(state) {
+      return state.listSavedVideo.filter(x => (x.source).toLowerCase() == "youtube".toLowerCase());
+    },
+    tikTokVideos(state) {
+      return state.listSavedVideo.filter(x => (x.source).toLowerCase() == "tiktok".toLowerCase());
+    },
+    facebookVideos(state) {
+      return state.listSavedVideo.filter(x => (x.source).toLowerCase() == "facebook".toLowerCase());
+    }
   },
 });

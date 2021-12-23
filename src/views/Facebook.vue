@@ -19,8 +19,12 @@
               width="220px"
               height="150px"
             />
-            <div class="video-unavailable item-img"  width="220px"
-              height="150px" v-if="!item || !item.thumbnail"></div>
+            <div
+              class="video-unavailable item-img"
+              width="220px"
+              height="150px"
+              v-if="!item || !item.thumbnail"
+            ></div>
             <div class="content">
               <div class="title text-ellipsis">
                 {{ item.title }}
@@ -54,7 +58,7 @@
 import { mapGetters } from "vuex";
 import { Auth } from "../store/auth.ts";
 export default {
-  name: "Category",
+  name: "Facebook",
   components: {},
   data: function() {
     return {};
@@ -76,7 +80,7 @@ export default {
   },
   computed: {
     listItem() {
-      return Auth.getters.savedVideos;
+      return Auth.getters.facebookVideos;
     },
   },
   created: function() {
