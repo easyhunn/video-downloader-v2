@@ -109,12 +109,19 @@ export default {
       this.$store.commit("setLoadingStatus", true);
 
       Auth.dispatch("signUp", { email: this.email, password: this.password })
-        .then((result) => {
+        .then((res) => {
           // me.isVerify = true;
-          this.$store.commit("setLoadingStatus", false);
+          if (res.success) {
+            this.$store.commit("handleSuccess", "Sign Up Success.");
+          } else {
+            this.$store.commit("handleError", res.message);
+          }
         })
         .catch((err) => {
           alert("error");
+        })
+        .finally(() => {
+          this.$store.commit("setLoadingStatus", false);
         });
     },
   },

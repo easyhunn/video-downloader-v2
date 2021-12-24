@@ -80,7 +80,7 @@ export default {
         source: me.detail.source,
         title: me.detail.title,
         description: me.detail.description?.slice(0, 255),
-        thumbnail: thumbnail,
+        thumbnail: me.detail?.thumbnails[0]?.url,
       };
       Auth.dispatch("addVideo", video).then((res) => {
         if (res && res.isSuccess) {

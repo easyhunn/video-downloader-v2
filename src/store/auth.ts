@@ -93,18 +93,24 @@ export const Auth = new Vuex.Store({
       deleteCookie("token");
     },
     async signUp(context, { email, password }) {
+      let res = {
+        success: false,
+        message: "",
+      };
       await axios
         .post("https://getvideo-api.vietlach.vn/auth/v1/signup", {
           email: email,
           password: password,
         })
         .then((result) => {
-          return result;
+          res.success = true;
         })
         .catch((err) => {
           console.log(err);
-          return err;
+          res.success = false;
+          res.message = err?.response?.data?.message || "";
         });
+      return res;
     },
     async getSavedVideos(context) {
       let url = "https://getvideo-api.vietlach.vn/api/v1/auth/video";
@@ -173,8 +179,7 @@ export const Auth = new Vuex.Store({
               id: video.id,
             },
           })
-          .then((res: any) => {
-          })
+          .then((res: any) => {})
           .catch(function(error) {
             // context.commit("handleError", "Can't find video.");
             console.log("delete error");
@@ -198,13 +203,19 @@ export const Auth = new Vuex.Store({
       return state.listSavedVideo;
     },
     youtubeVideos(state) {
-      return state.listSavedVideo.filter(x => (x.source).toLowerCase() == "youtube".toLowerCase());
+      return state.listSavedVideo.filter(
+        (x) => x.source.toLowerCase() == "youtube".toLowerCase()
+      );
     },
     tikTokVideos(state) {
-      return state.listSavedVideo.filter(x => (x.source).toLowerCase() == "tiktok".toLowerCase());
+      return state.listSavedVideo.filter(
+        (x) => x.source.toLowerCase() == "tiktok".toLowerCase()
+      );
     },
     facebookVideos(state) {
-      return state.listSavedVideo.filter(x => (x.source).toLowerCase() == "facebook".toLowerCase());
-    }
+      return state.listSavedVideo.filter(
+        (x) => x.source.toLowerCase() == "facebook".toLowerCase()
+      );
+    },
   },
 });
